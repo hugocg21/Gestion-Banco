@@ -2,16 +2,17 @@
   <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
   <div class="grid grid-cols-1 gap-4">
     <div class="bg-blue-100 p-4 rounded">
-      <h3 class="text-lg font-semibold">Ingresos</h3>
-      <p class="text-xl">{{ ingresos | currency }}</p>
+      <h3 class="text-lg font-semibold">Ingresos Totales:</h3>
+      <p class="text-xl">{{ income | currency }}</p>
     </div>
     <div class="bg-red-100 p-4 rounded">
-      <h3 class="text-lg font-semibold">Gastos</h3>
-      <p class="text-xl">{{ gastos | currency }}</p>
+      <h3 class="text-lg font-semibold">Gastos Totales:</h3>
+      <p class="text-xl">{{ expenses | currency }}</p>
     </div>
     <div class="bg-green-100 p-4 rounded">
-      <h3 class="text-lg font-semibold">Presupuesto Total</h3>
-      <p class="text-xl">{{ presupuesto | currency }}</p>
+      <h3 class="text-lg font-semibold">Presupuesto Total:</h3>
+      <p class="text-xl">{{ totalBudget | currency }}</p>
     </div>
   </div>
 </div>
+
