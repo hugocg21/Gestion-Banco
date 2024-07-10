@@ -1,0 +1,10 @@
+<div class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-4">Autenticación de Dos Factores</h2>
+  <form (ngSubmit)="verificarCodigo()">
+    <div class="mb-4">
+      <label class="block text-gray-700">Código</label>
+      <input [(ngModel)]="codigo" name="codigo" type="text" class="block w-full mt-1 p-2 border rounded">
+    </div>
+    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Verificar</button>
+  </form>
+</div>
