@@ -1,9 +1,0 @@
-<div class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
-  <h2 class="text-2xl font-bold mb-4">Notificaciones</h2>
-  <ul>
-    <li *ngFor="let notificacion of notificaciones" class="mb-2">
-      <span>{{ notificacion.mensaje }}</span>
-      <button (click)="eliminarNotificacion(notificacion.id)" class="text-red-600 hover:text-red-900 ml-4">Eliminar</button>
-    </li>
-  </ul>
-</div>
