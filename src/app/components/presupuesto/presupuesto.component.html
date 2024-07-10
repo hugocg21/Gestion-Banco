@@ -1,0 +1,23 @@
+<div class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-4">Configuración de Presupuesto</h2>
+  <form (ngSubmit)="agregarPresupuesto()">
+    <div class="mb-4">
+      <label class="block text-gray-700">Categoría</label>
+      <input [(ngModel)]="presupuesto.categoria" name="categoria" type="text" class="block w-full mt-1 p-2 border rounded">
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700">Monto</label>
+      <input [(ngModel)]="presupuesto.monto" name="monto" type="number" class="block w-full mt-1 p-2 border rounded">
+    </div>
+    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Agregar</button>
+  </form>
+  <div class="mt-6">
+    <h3 class="text-xl font-bold mb-4">Presupuestos Actuales</h3>
+    <ul>
+      <li *ngFor="let pres of presupuestos" class="mb-2">
+        <span>{{ pres.categoria }}: {{ pres.monto | currency }}</span>
+        <button (click)="eliminarPresupuesto(pres.categoria)" class="text-red-600 hover:text-red-900 ml-4">Eliminar</button>
+      </li>
+    </ul>
+  </div>
+</div>
