@@ -1,0 +1,27 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-4">Gestión de Presupuesto</h2>
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <div class="mb-4">
+      <label class="block text-gray-700">Categoría</label>
+      <input [(ngModel)]="budget.category" name="category" type="text" class="block w-full mt-1 p-2 border rounded" required>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700">Monto</label>
+      <input [(ngModel)]="budget.amount" name="amount" type="number" class="block w-full mt-1 p-2 border rounded" required>
+    </div>
+    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Establecer Presupuesto</button>
+  </form>
+  <div class="mt-6">
+    <h3 class="text-xl font-semibold mb-2">Presupuestos Actuales</h3>
+    <ul>
+      <li *ngFor="let budget of budgets" class="mb-2 p-2 border rounded">
+        <span>{{ budget.category }}: {{ budget.amount | currency }}</span>
+        <button (click)="deleteBudget(budget.category)" class="bg-transparent text-red-500 hover:text-red-700 ml-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
