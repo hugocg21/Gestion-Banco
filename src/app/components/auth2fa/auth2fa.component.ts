@@ -8,22 +8,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./auth2fa.component.css']
 })
 export class Auth2FAComponent {
-  codigo: string = '';
+  code: string = '';
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
-  verificarCodigo() {
-    this.authService.verificarCodigo(this.codigo).subscribe(
+  verifyCode() {
+    this.authService.verifyCode(this.code).subscribe(
       valid => {
         if (valid) {
           this.router.navigate(['/dashboard']);
         } else {
-          this.errorMessage = 'Código incorrecto';
+          this.errorMessage = 'Incorrect code';
         }
       },
       error => {
-        this.errorMessage = 'Error verificando el código';
+        this.errorMessage = 'Error verifying the code';
       }
     );
   }

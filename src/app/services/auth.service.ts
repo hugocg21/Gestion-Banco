@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 export class AuthService {
   private token: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>('/api/login', { username, password })
@@ -37,7 +37,7 @@ export class AuthService {
     return this.token;
   }
 
-  verificarCodigo(codigo: string): Observable<boolean> {
-    return this.http.post<boolean>('/api/verify-2fa', { codigo });
+  verifyCode(code: string): Observable<boolean> {
+    return this.http.post<boolean>('/api/verify-2fa', { code });
   }
 }
