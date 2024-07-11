@@ -1,5 +1,5 @@
-<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-  <h2 class="text-2xl font-bold mb-4">Notificaciones</h2>
+<div class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 p-4">
+  <h2 class="text-lg font-bold mb-2 text-black">Notificaciones</h2>
   <div *ngFor="let notification of notifications" class="mb-4 p-4 border-l-4 rounded shadow-sm"
        [ngClass]="{
          'border-green-500 bg-green-100 text-green-800': notification.type === 'reminder',
@@ -8,7 +8,7 @@
     <div class="flex justify-between items-center">
       <div>
         <p class="font-semibold">{{ notification.message }}</p>
-        <p class="text-sm">{{ notification.date | dateFormat }}</p>
+        <p class="text-sm">{{ notification.date | date: 'dd/MM/yyyy' }}</p>
       </div>
       <button (click)="deleteNotification(notification.id)" class="bg-transparent text-red-500 hover:text-red-700">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

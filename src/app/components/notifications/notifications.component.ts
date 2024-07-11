@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NotificationsService, Notification } from '../../services/notifications.service';
 
 @Component({
@@ -9,18 +9,26 @@ import { NotificationsService, Notification } from '../../services/notifications
 export class NotificationsComponent implements OnInit {
   notifications: Notification[] = [];
 
+  @Output() close = new EventEmitter<void>();
+
   constructor(private notificationsService: NotificationsService) { }
 
   ngOnInit(): void {
+    this.loadNotifications();
+  }
+
+  loadNotifications(): void {
     this.notificationsService.getNotifications().subscribe(
       notifications => this.notifications = notifications
     );
   }
 
-  deleteNotification(id: number) {
+  deleteNotification(id: number): void {
     this.notificationsService.deleteNotification(id);
-    this.notificationsService.getNotifications().subscribe(
-      notifications => this.notifications = notifications
-    );
+    this.loadNotifications(); // Reload notifications after deletion
+  }
+
+  closeNotifications(): void {
+    this.close.emit();
   }
 }

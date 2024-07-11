@@ -1,19 +1,47 @@
-<header class="bg-blue-600 text-white shadow-md">
-  <div class="container mx-auto flex items-center justify-between py-4 px-6">
+<header class="bg-blue-600 text-white shadow-md top-0 left-0 w-full z-1000">
+  <div class="flex items-center justify-between py-4 px-6">
     <div class="flex items-center">
-      <img src="https://www.flaticon.com/svg/static/icons/svg/4019/4019373.svg" alt="Logo" class="h-10 w-10 mr-3">
-      <h1 class="text-2xl font-bold">Gestión de Movimientos Bancarios</h1>
+      <img src="images/logo.png" alt="Logo" class="h-10 w-10 mr-3 header-logo">
+      <!-- <h1 class="text-2xl font-bold">Gestión de Movimientos Bancarios</h1> -->
     </div>
-    <nav>
-      <ul class="flex space-x-4">
-        <li><a routerLink="/dashboard" routerLinkActive="underline" class="hover:underline">Inicio</a></li>
-        <li><a routerLink="/resumen-financiero" routerLinkActive="underline" class="hover:underline">Resumen</a></li>
-        <li><a routerLink="/registro-movimientos" routerLinkActive="underline" class="hover:underline">Movimientos</a></li>
-        <li><a routerLink="/presupuesto" routerLinkActive="underline" class="hover:underline">Presupuesto</a></li>
-        <li><a routerLink="/historial-transacciones" routerLinkActive="underline" class="hover:underline">Historial</a></li>
-        <li><a routerLink="/notificaciones" routerLinkActive="underline" class="hover:underline">Notificaciones</a></li>
-        <li><a routerLink="/login" routerLinkActive="underline" class="hover:underline">Perfil</a></li>
+    <nav class="flex-1 text-center">
+      <ul class="flex space-x-6 justify-center header-menu">
+        <li><a href="javascript:void(0)" routerLink="/dashboard" appActiveLink="dashboard" class="menu-item">Inicio</a></li>
+        <li><a href="javascript:void(0)" routerLink="/transactions" appActiveLink="transactionForm" class="menu-item">Movimientos</a></li>
+        <li><a href="javascript:void(0)" routerLink="/budget" appActiveLink="budget" class="menu-item">Presupuesto</a></li>
+        <li><a href="javascript:void(0)" routerLink="/login" class="menu-item">Perfil</a></li>
       </ul>
     </nav>
+    <div class="relative">
+      <button (click)="toggleNotifications()" class="relative header-button">
+        <i class="fas fa-bell text-white text-xl"></i>
+      </button>
+      <app-notifications *ngIf="showNotifications" (close)="toggleNotifications()"></app-notifications>
+    </div>
   </div>
 </header>
+
+<!-- <header class="bg-blue-600 text-white shadow-md top-0 left-0 w-full z-1000">
+  <div class="flex items-center justify-between py-4 px-6">
+    <div class="flex items-center">
+      <img src="images/logo.png" alt="Logo" class="h-10 w-10 mr-3 header-logo">
+    </div>
+    <nav class="flex-1 text-center">
+      <ul class="flex space-x-6 justify-center header-menu">
+        <li><a href="javascript:void(0)" (click)="scrollToSection('dashboard')" appActiveLink="dashboard" class="menu-item">Inicio</a></li>
+        <li><a href="javascript:void(0)" (click)="scrollToSection('financialSummary')" appActiveLink="financialSummary" class="menu-item">Resumen</a></li>
+        <li><a href="javascript:void(0)" (click)="scrollToSection('transactionForm')" appActiveLink="transactionForm" class="menu-item">Movimientos</a></li>
+        <li><a href="javascript:void(0)" (click)="scrollToSection('budget')" appActiveLink="budget" class="menu-item">Presupuesto</a></li>
+        <li><a href="javascript:void(0)" (click)="scrollToSection('transactionsHistory')" appActiveLink="transactionsHistory" class="menu-item">Historial</a></li>
+        <li><a href="javascript:void(0)" class="menu-item">Perfil</a></li>
+      </ul>
+    </nav>
+    <div class="relative">
+      <button (click)="toggleNotifications()" class="relative header-button">
+        <i class="fas fa-bell text-white text-xl"></i>
+      </button>
+      <app-notifications *ngIf="showNotifications" (close)="toggleNotifications()"></app-notifications>
+    </div>
+  </div>
+</header> -->
+
