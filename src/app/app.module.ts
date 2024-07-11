@@ -12,9 +12,10 @@ import { FinancialSummaryComponent } from './components/financial-summary/financ
 import { HeaderComponent } from './components/header/header.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
-import { TransactionFormComponent } from './components/transaction-form/transaction-form.component';
-import { TransactionsHistoryComponent } from './components/transactions-history/transactions-history.component';
 import { DateFormatPipe } from './pipes/date-format.pipe';
+import { ActiveLinkDirective } from './directives/active-link.directive';
+import { TransactionsComponent } from './components/transactions/transactions.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -24,11 +25,12 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
     Auth2FAComponent,
     HeaderComponent,
     DateFormatPipe,
-    TransactionFormComponent,
     FinancialSummaryComponent,
     BudgetComponent,
-    TransactionsHistoryComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    ActiveLinkDirective,
+    TransactionsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

@@ -2,3 +2,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body, html {
+  background-color: #edf2f7;
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 90%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.section {
+  min-height: 100vh;
+  padding: 4rem 1rem;
+}
+
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
