@@ -21,11 +21,16 @@ export class FinancialSummaryComponent implements OnInit {
   }
 
   updateSummary() {
-    const totals = this.summaryService.getTotals();
-    this.income = totals.income;
-    this.expense = totals.expense;
-    this.totalsByCategory = this.summaryService.getTotalsByCategory();
-    this.createChart();
+    this.summaryService.getTotals().subscribe(totals => {
+      this.income = totals.income;
+      this.expense = totals.expense;
+      this.createChart();
+    });
+
+    this.summaryService.getTotalsByCategory().subscribe(totalsByCategory => {
+      this.totalsByCategory = totalsByCategory;
+      this.createChart();
+    });
   }
 
   createChart() {
@@ -36,7 +41,7 @@ export class FinancialSummaryComponent implements OnInit {
         data: {
           labels: Object.keys(this.totalsByCategory),
           datasets: [{
-            label: 'Expenses by Category',
+            label: 'Gastos por Categoría',
             data: Object.values(this.totalsByCategory),
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
