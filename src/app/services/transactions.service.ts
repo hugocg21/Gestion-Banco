@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Transaction {
   id: number;
@@ -24,41 +26,56 @@ export class TransactionsService {
     { id: 8, type: 'income', category: 'Venta', amount: 300, date: new Date('2024-01-18'), description: 'Venta de artículos usados' },
     { id: 9, type: 'expense', category: 'Educación', amount: 250, date: new Date('2024-01-20'), description: 'Curso online' },
     { id: 10, type: 'expense', category: 'Restaurante', amount: 80, date: new Date('2024-01-22'), description: 'Cena en restaurante' },
-    // Añadir más datos de prueba aquí
+    // Añadir más transacciones de prueba aquí
   ];
 
-  constructor() { }
+  constructor() {}
+
+  getTransactions(): Observable<Transaction[]> {
+    return of(this.transactions);
+  }
 
   addTransaction(transaction: Transaction): void {
     transaction.id = this.transactions.length ? Math.max(...this.transactions.map(t => t.id)) + 1 : 1;
     this.transactions.push(transaction);
   }
 
-  getTransactions(): Transaction[] {
-    return this.transactions;
+  getTotals(): Observable<{ income: number, expense: number }> {
+    return this.getTransactions().pipe(
+      map(transactions => {
+        const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+        const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+        return { income, expense };
+      })
+    );
   }
 
-  filterTransactions(category: string): Transaction[] {
-    return this.transactions.filter(t => t.category === category);
+  getTotalsByCategory(): Observable<{ [category: string]: number }> {
+    return this.getTransactions().pipe(
+      map(transactions => {
+        return transactions.reduce((acc, t) => {
+          if (!acc[t.category]) {
+            acc[t.category] = 0;
+          }
+          acc[t.category] += t.amount;
+          return acc;
+        }, {} as { [category: string]: number });
+      })
+    );
+  }
+
+  getCategories(): string[] {
+    return [...new Set(this.transactions.map(transaction => transaction.category))];
   }
 
   deleteTransaction(id: number): void {
-    this.transactions = this.transactions.filter(t => t.id !== id);
+    this.transactions = this.transactions.filter(transaction => transaction.id !== id);
   }
 
-  getTotals(): { income: number, expense: number } {
-    const income = this.transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-    const expense = this.transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-    return { income, expense };
-  }
-
-  getTotalsByCategory(): { [category: string]: number } {
-    return this.transactions.reduce((acc, t) => {
-      if (!acc[t.category]) {
-        acc[t.category] = 0;
-      }
-      acc[t.category] += t.amount;
-      return acc;
-    }, {} as { [category: string]: number });
+  getTransactionsByMonth(year: number, month: number): Observable<Transaction[]> {
+    return this.getTransactions().pipe(
+      map(transactions => transactions.filter(t =>
+        t.date.getFullYear() === year && t.date.getMonth() === month))
+    );
   }
 }
