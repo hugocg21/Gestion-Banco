@@ -1,25 +1,51 @@
 <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-  <h2 class="text-2xl font-bold mb-4">Gestión de Presupuesto</h2>
-  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
-    <div class="mb-4">
-      <label class="block text-gray-700">Categoría</label>
-      <input [(ngModel)]="budget.category" name="category" type="text" class="block w-full mt-1 p-2 border rounded" required>
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Gestión de Presupuesto</h2>
+    <button (click)="toggleForm()" class="bg-blue-500 text-white p-2 rounded-full shadow focus:outline-none">
+      <i class="fas" [ngClass]="showForm ? 'fa-minus' : 'fa-plus'"></i>
+    </button>
+  </div>
+
+  <div class="flex space-x-4">
+    <div>
+      <label class="block text-gray-700">Año</label>
+      <select [(ngModel)]="selectedYear" (change)="onMonthChange()" class="block w-full mt-1 p-2 border rounded">
+        <option *ngFor="let year of [2023, 2024, 2025]" [value]="year">{{ year }}</option>
+      </select>
     </div>
-    <div class="mb-4">
-      <label class="block text-gray-700">Monto</label>
-      <input [(ngModel)]="budget.amount" name="amount" type="number" class="block w-full mt-1 p-2 border rounded" required>
+    <div>
+      <label class="block text-gray-700">Mes</label>
+      <select [(ngModel)]="selectedMonth" (change)="onMonthChange()" class="block w-full mt-1 p-2 border rounded">
+        <option *ngFor="let month of months; let i = index" [value]="i + 1">{{ month }}</option>
+      </select>
     </div>
-    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Establecer Presupuesto</button>
-  </form>
-  <div class="mt-6">
+  </div>
+
+  <!-- Formulario con animación -->
+  <div *ngIf="showForm" class="mt-4 transition-all duration-500 ease-in-out transform" [ngClass]="{'opacity-100': showForm, 'opacity-0': !showForm}">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="col-span-1">
+        <label class="block text-gray-700">Categoría</label>
+        <input [(ngModel)]="budget.category" name="category" type="text" class="block w-full mt-1 p-2 border rounded" required>
+      </div>
+      <div class="col-span-1">
+        <label class="block text-gray-700">Monto</label>
+        <input [(ngModel)]="budget.amount" name="amount" type="number" class="block w-full mt-1 p-2 border rounded" required>
+      </div>
+      <div class="col-span-1 sm:col-span-2 lg:col-span-1 flex items-end">
+        <button type="submit" class="w-full bg-green-500 text-white p-2 rounded">Añadir Presupuesto</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de Presupuestos Actuales -->
+  <div class="mt-6 bg-gray-50 p-4 rounded-lg shadow-inner">
     <h3 class="text-xl font-semibold mb-2">Presupuestos Actuales</h3>
     <ul>
-      <li *ngFor="let budget of budgets" class="mb-2 p-2 border rounded">
+      <li *ngFor="let budget of budgets" class="mb-2 p-2 border rounded flex justify-between items-center bg-white shadow-sm">
         <span>{{ budget.category }}: {{ budget.amount | currency }}</span>
-        <button (click)="deleteBudget(budget.category)" class="bg-transparent text-red-500 hover:text-red-700 ml-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
+        <button (click)="deleteBudget(budget.category)" class="bg-transparent text-red-500 hover:text-red-700">
+          <i class="fas fa-times"></i>
         </button>
       </li>
     </ul>
