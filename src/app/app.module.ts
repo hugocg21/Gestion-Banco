@@ -1,5 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +22,10 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
 import { ActiveLinkDirective } from './directives/active-link.directive';
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { TransactionsService } from './services/transactions.service';
+import { BudgetService } from './services/budget.service';
 
 @NgModule({
   declarations: [
@@ -30,15 +40,20 @@ import { FooterComponent } from './components/footer/footer.component';
     NotificationsComponent,
     ActiveLinkDirective,
     TransactionsComponent,
-    FooterComponent
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTooltipModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [provideAnimationsAsync(), TransactionsService, BudgetService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

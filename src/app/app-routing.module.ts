@@ -14,7 +14,6 @@ const routes: Routes = [
   { path: 'transactions', component: TransactionsComponent },
   { path: 'budget', component: BudgetComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'auth-2fa', component: Auth2FAComponent }
 ];
 
 @NgModule({
