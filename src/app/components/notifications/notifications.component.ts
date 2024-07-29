@@ -25,7 +25,7 @@ export class NotificationsComponent implements OnInit {
 
   deleteNotification(id: number): void {
     this.notificationsService.deleteNotification(id);
-    this.loadNotifications(); // Reload notifications after deletion
+    this.loadNotifications();
   }
 
   closeNotifications(): void {
