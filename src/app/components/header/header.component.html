@@ -1,47 +1,18 @@
-<header class="bg-blue-600 text-white shadow-md top-0 left-0 w-full z-1000">
+<header class="bg-blue-600 text-white shadow-md w-full z-1000 top-0">
   <div class="flex items-center justify-between py-4 px-6">
     <div class="flex items-center">
-      <img src="images/logo.png" alt="Logo" class="h-10 w-10 mr-3 header-logo">
-      <!-- <h1 class="text-2xl font-bold">Gestión de Movimientos Bancarios</h1> -->
+      <img src="images/logo.png" alt="Logo" class="h-10 w-10 mr-3 transition-transform transform hover:scale-110"/>
     </div>
-    <nav class="flex-1 text-center">
-      <ul class="flex space-x-6 justify-center header-menu">
-        <li><a href="javascript:void(0)" routerLink="/dashboard" appActiveLink="dashboard" class="menu-item">Inicio</a></li>
-        <li><a href="javascript:void(0)" routerLink="/transactions" appActiveLink="transactionForm" class="menu-item">Movimientos</a></li>
-        <li><a href="javascript:void(0)" routerLink="/budget" appActiveLink="budget" class="menu-item">Presupuesto</a></li>
-        <li><a href="javascript:void(0)" routerLink="/login" class="menu-item">Perfil</a></li>
-      </ul>
-    </nav>
-    <div class="relative">
-      <button (click)="toggleNotifications()" class="relative header-button">
-        <i class="fas fa-bell text-white text-xl"></i>
+    <h1 class="text-2xl font-bold text-center flex-grow">Gestión de Movimientos Bancarios</h1>
+    <div class="relative flex items-center space-x-4">
+      <button (click)="toggleNotifications($event)" class="relative">
+        <i class="fas fa-bell text-white text-xl transition-transform transform hover:scale-110"></i>
+        <app-notifications *ngIf="showNotifications" (click)="$event.stopPropagation()"></app-notifications>
       </button>
-      <app-notifications *ngIf="showNotifications" (close)="toggleNotifications()"></app-notifications>
+      <button (click)="toggleLogin($event)" class="relative">
+        <i class="fas fa-user text-white text-xl transition-transform transform hover:scale-110"></i>
+        <app-login *ngIf="showLogin" (click)="$event.stopPropagation()"></app-login>
+      </button>
     </div>
   </div>
 </header>
-
-<!-- <header class="bg-blue-600 text-white shadow-md top-0 left-0 w-full z-1000">
-  <div class="flex items-center justify-between py-4 px-6">
-    <div class="flex items-center">
-      <img src="images/logo.png" alt="Logo" class="h-10 w-10 mr-3 header-logo">
-    </div>
-    <nav class="flex-1 text-center">
-      <ul class="flex space-x-6 justify-center header-menu">
-        <li><a href="javascript:void(0)" (click)="scrollToSection('dashboard')" appActiveLink="dashboard" class="menu-item">Inicio</a></li>
-        <li><a href="javascript:void(0)" (click)="scrollToSection('financialSummary')" appActiveLink="financialSummary" class="menu-item">Resumen</a></li>
-        <li><a href="javascript:void(0)" (click)="scrollToSection('transactionForm')" appActiveLink="transactionForm" class="menu-item">Movimientos</a></li>
-        <li><a href="javascript:void(0)" (click)="scrollToSection('budget')" appActiveLink="budget" class="menu-item">Presupuesto</a></li>
-        <li><a href="javascript:void(0)" (click)="scrollToSection('transactionsHistory')" appActiveLink="transactionsHistory" class="menu-item">Historial</a></li>
-        <li><a href="javascript:void(0)" class="menu-item">Perfil</a></li>
-      </ul>
-    </nav>
-    <div class="relative">
-      <button (click)="toggleNotifications()" class="relative header-button">
-        <i class="fas fa-bell text-white text-xl"></i>
-      </button>
-      <app-notifications *ngIf="showNotifications" (close)="toggleNotifications()"></app-notifications>
-    </div>
-  </div>
-</header> -->
-
