@@ -1,9 +1,4 @@
 .chart-container {
   position: relative;
-}
-
-@media (max-width: 768px) {
-  .chart-container {
-    height: 300px;
-  }
+  height: 660px;
 }

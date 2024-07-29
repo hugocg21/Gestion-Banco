@@ -1,24 +1,14 @@
-<div class="w-full p-6 bg-white rounded-lg shadow-md mt-4">
-  <h2 class="text-2xl font-bold mb-4 text-center text-blue-600">Tablero</h2>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="bg-gray-100 p-4 rounded-lg shadow-inner">
-      <h3 class="text-xl font-semibold mb-2">Resumen Financiero</h3>
-      <p class="text-lg text-green-500">Ingresos Totales: <span class="font-semibold">{{ income | currency }}</span></p>
-      <p class="text-lg text-red-500">Gastos Totales: <span class="font-semibold">{{ expenses | currency }}</span></p>
-      <p class="text-lg text-blue-500">Presupuesto Total: <span class="font-semibold">{{ totalBudget | currency }}</span></p>
-      <p class="text-lg text-purple-500">Balance: <span class="font-semibold">{{ balance | currency }}</span></p>
-    </div>
-    <div class="bg-gray-100 p-4 rounded-lg shadow-inner">
-      <h3 class="text-xl font-semibold mb-2">Ingresos vs Gastos</h3>
+<div>
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+    <mat-tab label="Ingresos y Gastos Anuales" class="mt-3">
       <div class="chart-container">
-        <canvas id="incomeExpenseChart"></canvas>
+        <canvas #financialSummaryChart></canvas>
       </div>
-    </div>
-    <div class="bg-gray-100 p-4 rounded-lg shadow-inner">
-      <h3 class="text-xl font-semibold mb-4">Distribución de Gastos por Categoría</h3>
+    </mat-tab>
+    <mat-tab label="Distribución de Gastos por Categoría">
       <div class="chart-container">
-        <canvas id="expenseDistributionChart"></canvas>
+        <canvas #expenseDistributionChart></canvas>
       </div>
-    </div>
-  </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>
