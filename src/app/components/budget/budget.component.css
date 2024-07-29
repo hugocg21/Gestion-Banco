@@ -24,11 +24,12 @@ button[type="submit"] {
   background-color: #f9fafb;
 }
 
-button .fa-plus, button .fa-minus {
+button .fa-plus,
+button .fa-minus {
   width: 25px;
 }
 
-button.focus:outline-none {
+button.focus\:outline-none {
   outline: none;
 }
 
@@ -45,4 +46,16 @@ button.focus:outline-none {
 .mb-4 select:focus {
   border-color: #3b82f6;
   outline: none;
+}
+
+.mb-4 .bg-gray-300 {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mb-4 .text-center {
+  flex: 1;
 }

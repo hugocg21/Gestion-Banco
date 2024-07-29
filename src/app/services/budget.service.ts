@@ -9,7 +9,7 @@ export interface Budget {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BudgetService {
   private budgets: Budget[] = [
@@ -67,10 +67,10 @@ export class BudgetService {
     { category: 'Entretenimiento', amount: 210, year: 2024, month: 7 },
     { category: 'Salud', amount: 360, year: 2024, month: 7 },
     { category: 'Educación', amount: 520, year: 2024, month: 7 },
-    { category: 'Restaurante', amount: 320, year: 2024, month: 7 }
+    { category: 'Restaurante', amount: 320, year: 2024, month: 7 },
   ];
 
-  constructor(private notificationsService: NotificationsService) { }
+  constructor(private notificationsService: NotificationsService) {}
 
   addBudget(budget: Budget): void {
     this.budgets.push(budget);
@@ -81,26 +81,40 @@ export class BudgetService {
   }
 
   getBudgetsByMonth(year: number, month: number): Budget[] {
-    return this.budgets.filter(budget => {
+    return this.budgets.filter((budget) => {
       const budgetDate = new Date(budget.year, budget.month - 1);
       const targetDate = new Date(year, month - 1);
-      return budgetDate.getFullYear() === targetDate.getFullYear() && budgetDate.getMonth() === targetDate.getMonth();
+      return (
+        budgetDate.getFullYear() === targetDate.getFullYear() &&
+        budgetDate.getMonth() === targetDate.getMonth()
+      );
     });
   }
 
   deleteBudget(category: string, year: number, month: number): void {
-    this.budgets = this.budgets.filter(b => b.category !== category || b.year !== year || b.month !== month);
+    this.budgets = this.budgets.filter(
+      (b) => b.category !== category || b.year !== year || b.month !== month
+    );
   }
 
   getBudgetByCategory(category: string, year: number, month: number): number {
-    const budget = this.budgets.find(b => b.category === category && b.year === year && b.month === month);
+    const budget = this.budgets.find(
+      (b) => b.category === category && b.year === year && b.month === month
+    );
     return budget ? budget.amount : 0;
   }
 
-  checkBudgetExceed(category: string, amount: number, year: number, month: number): void {
+  checkBudgetExceed(
+    category: string,
+    amount: number,
+    year: number,
+    month: number
+  ): void {
     const budget = this.getBudgetByCategory(category, year, month);
     if (amount > budget) {
-      this.notificationsService.addLowBalanceAlert(`Se ha excedido el presupuesto para la categoría ${category} en ${month}/${year}`);
+      this.notificationsService.addLowBalanceAlert(
+        `Se ha excedido el presupuesto para la categoría ${category} en ${month}/${year}`
+      );
     }
   }
 }
