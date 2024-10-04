@@ -32,43 +32,66 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('financialSummaryChart') financialSummaryChart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('expenseDistributionChart') expenseDistributionChart!: ElementRef<HTMLCanvasElement>;
 
+  private summaryChartInstance: Chart | undefined;
+  private expenseChartInstance: Chart | undefined;
+
   constructor(private transactionsService: TransactionsService) {}
 
   ngOnInit(): void {
-    this.updateSummary();
-    this.transactionsService.getAnnualExpensesByCategory().subscribe(data => {
-      this.annualExpensesByCategory = data;
+
+    this.transactionsService.transactionsChanged.subscribe(() => {
+      this.updateSummary();
+      this.updateExpenseDistribution();
     });
+
+
+    this.updateSummary();
+    this.updateExpenseDistribution();
   }
 
   ngAfterViewInit(): void {
-    this.createChart(this.financialSummaryChart.nativeElement, 'financialSummaryChart');
+    if (this.financialSummaryChart) {
+      this.createChart(this.financialSummaryChart.nativeElement);
+    }
   }
 
   updateSummary() {
     this.transactionsService.getAnnualIncomeExpense().subscribe((data) => {
+      console.log('Datos de ingresos y gastos:', data);
       this.monthlyIncome = data.map((item) => item.income);
       this.monthlyExpenses = data.map((item) => item.expense);
-      this.createChart(this.financialSummaryChart.nativeElement, 'financialSummaryChart');
+
+      if (this.financialSummaryChart) {
+        this.createChart(this.financialSummaryChart.nativeElement);
+      }
+    });
+  }
+
+  updateExpenseDistribution() {
+    this.transactionsService.getAnnualExpensesByCategory().subscribe((data) => {
+      console.log('Datos de gastos por categoría:', data);
+      this.annualExpensesByCategory = data;
+
+      if (this.expenseDistributionChart) {
+        this.createExpenseDistributionChart(this.expenseDistributionChart.nativeElement);
+      }
     });
   }
 
   onTabChange(event: MatTabChangeEvent): void {
     const tabIndex = event.index;
-    switch (tabIndex) {
-      case 0:
-        this.createChart(this.financialSummaryChart.nativeElement, 'financialSummaryChart');
-        break;
-      case 1:
-        this.createExpenseDistributionChart(this.expenseDistributionChart.nativeElement);
-        break;
+    if (tabIndex === 1 && this.expenseDistributionChart) {
+      this.createExpenseDistributionChart(this.expenseDistributionChart.nativeElement);
     }
   }
 
-  createChart(canvas: HTMLCanvasElement, chartId: string) {
+  createChart(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      new Chart(ctx, {
+      if (this.summaryChartInstance) {
+        this.summaryChartInstance.destroy();
+      }
+      this.summaryChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: this.months,
@@ -105,6 +128,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   createExpenseDistributionChart(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d');
     if (ctx) {
+      if (this.expenseChartInstance) {
+        this.expenseChartInstance.destroy();
+      }
+
+      if (Object.keys(this.annualExpensesByCategory).length === 0) {
+        console.warn('No hay datos para mostrar en el gráfico de gastos por categoría.');
+        return;
+      }
+
       new Chart(ctx, {
         type: 'pie',
         data: {
