@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TransactionsService, Transaction } from '../../services/transactions.service';
+import { TransactionsService } from '../../services/transactions.service';
+import { Transaction } from '../../models/transaction';
 
 @Component({
   selector: 'app-transactions',
@@ -9,7 +10,6 @@ import { TransactionsService, Transaction } from '../../services/transactions.se
 export class TransactionsComponent implements OnInit {
   transactions: Transaction[] = [];
   transaction: Transaction = {
-    id: 0,
     type: 'income',
     category: '',
     amount: 0,
@@ -18,6 +18,8 @@ export class TransactionsComponent implements OnInit {
   };
 
   filter: string = '';
+  totalIncome: number = 0;
+  totalExpense: number = 0;
   incomeFilterCategory: string = '';
   expenseFilterCategory: string = '';
   incomeCategories: string[] = [];
@@ -47,6 +49,28 @@ export class TransactionsComponent implements OnInit {
   ngOnInit(): void {
     this.loadTransactions();
     this.loadCategories();
+
+    this.calculateTotals();
+
+
+    this.transactionsService.transactionsChanged.subscribe(() => {
+      this.calculateTotals();
+    });
+  }
+
+  calculateTotals() {
+    this.transactionsService.getAnnualIncomeExpense().subscribe((totals) => {
+      let totalIncome = 0;
+      let totalExpense = 0;
+
+      totals.forEach((month) => {
+        totalIncome += month.income;
+        totalExpense += month.expense;
+      });
+
+      this.totalIncome = totalIncome;
+      this.totalExpense = totalExpense;
+    });
   }
 
   loadTransactions(): void {
@@ -77,38 +101,39 @@ export class TransactionsComponent implements OnInit {
     ];
   }
 
-  addTransaction() {
-    this.transactionsService.addTransaction(this.transaction);
-    this.transaction = {
-      id: 0,
-      type: 'income',
-      category: '',
-      amount: 0,
-      date: new Date(),
-      description: '',
-    };
-    this.showForm = false;
-    this.loadTransactions();
+  addTransaction(): void {
+    this.transactionsService.addTransaction(this.transaction).then(() => {
+      this.transaction = {
+        type: 'income',
+        category: '',
+        amount: 0,
+        date: new Date(),
+        description: '',
+      };
+      this.showForm = false;
+      this.loadTransactions();
+    });
   }
 
-  toggleForm() {
+  toggleForm(): void {
     this.showForm = !this.showForm;
   }
 
-  toggleDeleteIcons() {
+  toggleDeleteIcons(): void {
     this.showDeleteIcons = !this.showDeleteIcons;
   }
 
-  deleteTransaction(id: number): void {
-    this.transactionsService.deleteTransaction(id);
+  deleteTransaction(id: string): void {
+    this.transactionsService.deleteTransaction(id).then(() => {
+      this.loadTransactions();
+    });
+  }
+
+  onDateChange(): void {
     this.loadTransactions();
   }
 
-  onDateChange() {
-    this.loadTransactions();
-  }
-
-  prevMonth() {
+  prevMonth(): void {
     if (this.selectedMonth === 1) {
       this.selectedMonth = 12;
       this.selectedYear--;
@@ -118,7 +143,7 @@ export class TransactionsComponent implements OnInit {
     this.loadTransactions();
   }
 
-  nextMonth() {
+  nextMonth(): void {
     if (this.selectedMonth === 12) {
       this.selectedMonth = 1;
       this.selectedYear++;

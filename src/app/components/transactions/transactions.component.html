@@ -27,7 +27,7 @@
   </div>
   <div *ngIf="filteredIncomeTransactions.length || filteredExpenseTransactions.length" class="flex h-full space-x-4">
     <div class="w-1/2 bg-gray-100 p-6 rounded-lg shadow-inner overflow-y-auto max-h-96">
-      <h3 class="text-xl font-semibold mb-4 text-center">Ingresos</h3>
+      <h3 class="text-xl font-semibold mb-4 text-center">Ingresos - {{ totalIncome | currency:'EUR' }}</h3>
       <div class="mb-4 flex justify-between items-center">
         <select [(ngModel)]="incomeFilterCategory" class="block w-25 p-2 border rounded">
           <option value="">Todas las Categorías</option>
@@ -40,7 +40,7 @@
             <div>
               <p class="font-semibold text-md text-green-700"> {{ transaction.category }} - {{ transaction.amount }}€ </p>
             </div>
-            <button *ngIf="showDeleteIcons" (click)="deleteTransaction(transaction.id)" class="bg-transparent text-red-500 hover:text-red-700">
+            <button *ngIf="showDeleteIcons" (click)="transaction.id ? deleteTransaction(transaction.id) : null" class="bg-transparent text-red-500 hover:text-red-700">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -51,7 +51,7 @@
     </div>
 
     <div class="w-1/2 bg-gray-100 p-6 rounded-lg shadow-inner overflow-y-auto max-h-96">
-      <h3 class="text-xl font-semibold mb-4 text-center">Gastos</h3>
+      <h3 class="text-xl font-semibold mb-4 text-center">Gastos - {{ totalExpense | currency:'EUR' }}</h3>
       <div class="mb-4 flex justify-between items-center">
         <select [(ngModel)]="expenseFilterCategory" class="block w-25 p-2 border rounded">
           <option value="">Todas las Categorías</option>
@@ -64,7 +64,7 @@
             <div>
               <p class="font-semibold text-md text-red-700"> {{ transaction.category }} - {{ transaction.amount }}€ </p>
             </div>
-            <button *ngIf="showDeleteIcons" (click)="deleteTransaction(transaction.id)" class="bg-transparent text-red-500 hover:text-red-700">
+            <button *ngIf="showDeleteIcons" (click)="transaction.id ? deleteTransaction(transaction.id) : null" class="bg-transparent text-red-500 hover:text-red-700">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
