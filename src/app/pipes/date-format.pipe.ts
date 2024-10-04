@@ -9,6 +9,6 @@ export class DateFormatPipe implements PipeTransform {
     if (!value) {
       return '';
     }
-    return formatDate(value, 'dd/MM/yyyy', 'en-US');
+    return formatDate(value, 'dd/MM/yyyy', 'en-ES');
   }
 }
