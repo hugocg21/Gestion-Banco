@@ -19,7 +19,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { DateFormatPipe } from './pipes/date-format.pipe';
 import { TransactionsComponent } from './components/transactions/transactions.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { TransactionsService } from './services/transactions.service';
@@ -37,8 +36,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     FinancialSummaryComponent,
     BudgetComponent,
     NotificationsComponent,
-    TransactionsComponent,
-    FooterComponent,
+    TransactionsComponent
   ],
   imports: [
     BrowserModule,
