@@ -75,14 +75,20 @@ export class TransactionsComponent implements OnInit {
 
   loadTransactions(): void {
     this.transactionsService.getTransactions().subscribe((transactions) => {
-      this.transactions = transactions.filter(
-        (t) =>
-          new Date(t.date).getFullYear() === this.selectedYear &&
-          new Date(t.date).getMonth() + 1 === this.selectedMonth
-      );
+      // Filtra las transacciones por el mes y el año seleccionados
+      this.transactions = transactions
+        .filter(
+          (t) =>
+            new Date(t.date).getFullYear() === this.selectedYear &&
+            new Date(t.date).getMonth() + 1 === this.selectedMonth
+        )
+        // Ordena las transacciones por fecha (de más reciente a más antigua)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
       this.loadCategories();
     });
   }
+
 
   loadCategories(): void {
     this.incomeCategories = [

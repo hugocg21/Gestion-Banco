@@ -1,14 +1,17 @@
 <div>
   <mat-tab-group (selectedTabChange)="onTabChange($event)">
     <mat-tab label="Ingresos y Gastos Anuales" class="mt-3">
-      <div class="chart-container">
+      <div class="relative h-[660px]">
         <canvas #financialSummaryChart></canvas>
       </div>
     </mat-tab>
     <mat-tab label="Distribución de Gastos por Categoría">
-      <div class="chart-container">
+      <div class="relative h-[660px]">
         <canvas #expenseDistributionChart></canvas>
       </div>
+    </mat-tab>
+    <mat-tab label="Ahorro">
+      <app-monthly-summary></app-monthly-summary>
     </mat-tab>
   </mat-tab-group>
 </div>

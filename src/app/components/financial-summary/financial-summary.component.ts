@@ -6,8 +6,7 @@ Chart.register(...registerables);
 
 @Component({
   selector: 'app-financial-summary',
-  templateUrl: './financial-summary.component.html',
-  styleUrls: ['./financial-summary.component.css'],
+  templateUrl: './financial-summary.component.html'
 })
 export class FinancialSummaryComponent implements OnInit {
   monthlyIncome: number[] = [];

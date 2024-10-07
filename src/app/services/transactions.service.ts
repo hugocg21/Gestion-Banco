@@ -18,6 +18,7 @@ export class TransactionsService {
     this.transactions = this.transactionsCollection.snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Transaction;
+        // Asegúrate de que 'date' se convierte en una instancia de Date
         data.date = new Date(data.date);
         const id = a.payload.doc.id;
         return { id, ...data };
@@ -75,7 +76,12 @@ export class TransactionsService {
   getTransactionsByMonth(year: number, month: number): Observable<Transaction[]> {
     return this.getTransactions().pipe(
       map(transactions =>
-        transactions.filter(t => t.date.getFullYear() === year && t.date.getMonth() === month)
+        transactions
+          .filter(t => {
+            const transactionDate = new Date(t.date);
+            return transactionDate.getFullYear() === year && transactionDate.getMonth() === month;
+          })
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Ordena de más reciente a más antigua
       )
     );
   }

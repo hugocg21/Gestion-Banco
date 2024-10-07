@@ -1,0 +1,10 @@
+<div class="p-6 rounded-lg shadow-md">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+    <div *ngFor="let month of months" class="bg-gray-50 p-4 rounded-lg shadow-lg">
+      <h4 class="text-xl font-semibold text-center mb-2">{{ month.name }}</h4>
+      <p class="text-green-600 text-center"><strong>Ingresos:</strong> {{ monthlyTotals[month.value - 1]?.income | currency:'EUR' }}</p>
+      <p class="text-red-600 text-center"><strong>Gastos:</strong> {{ monthlyTotals[month.value - 1]?.expense | currency:'EUR' }}</p>
+      <p class="text-blue-600 text-center"><strong>Porcentaje de Ahorro:</strong> {{ monthlyTotals[month.value - 1]?.ahorro | number:'1.2-2' }}%</p>
+    </div>
+  </div>
+</div>

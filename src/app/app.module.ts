@@ -26,6 +26,8 @@ import { BudgetService } from './services/budget.service';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { MonthlySummaryComponent } from './components/monthly-summary/monthly-summary.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     FinancialSummaryComponent,
     BudgetComponent,
     NotificationsComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    MonthlySummaryComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
