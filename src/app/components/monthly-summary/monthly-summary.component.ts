@@ -72,8 +72,14 @@ export class MonthlySummaryComponent implements OnInit {
       // Calcular el porcentaje de ahorro por mes
       Object.keys(monthlyTotals).forEach((monthKey) => {
         const monthData = monthlyTotals[+monthKey];
+
+        // Verifica si hay ingresos para ese mes
         if (monthData.income > 0) {
-          monthData.ahorro = ((this.ingresoFijo - monthData.expense) / this.ingresoFijo) * 100;
+          // Calcular el porcentaje de ahorro basado en ingresos y gastos reales
+          monthData.ahorro = ((monthData.income - monthData.expense) / monthData.income) * 100;
+        } else {
+          // Si no hay ingresos, el porcentaje de ahorro es 0
+          monthData.ahorro = 0;
         }
       });
 
