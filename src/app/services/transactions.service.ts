@@ -16,20 +16,23 @@ export class TransactionsService {
     this.transactionsCollection = firestore.collection<Transaction>('transactions');
 
     this.transactions = this.transactionsCollection.snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as Transaction;
-        // Asegúrate de que 'date' se convierte en una instancia de Date
-        data.date = new Date(data.date);
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      }))
+      map(actions =>
+        actions.map(a => {
+          const data = a.payload.doc.data() as Transaction;
+          data.date = new Date(data.date); // Convertir la fecha en instancia de Date
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        })
+      )
     );
   }
 
+  // Obtener todas las transacciones
   getTransactions(): Observable<Transaction[]> {
     return this.transactions;
   }
 
+  // Agregar una nueva transacción
   addTransaction(transaction: Transaction): Promise<void> {
     const id = this.firestore.createId();
     return this.transactionsCollection.doc(id).set(transaction).then(() => {
@@ -37,108 +40,103 @@ export class TransactionsService {
     });
   }
 
-  deleteTransaction(id: string): Promise<void> {
-    return this.transactionsCollection.doc(id).delete().then(() => {
-      this.transactionsChanged.next();
-    });
-  }
-
+  // Actualizar una transacción existente
   updateTransaction(id: string, transaction: Transaction): Promise<void> {
     return this.transactionsCollection.doc(id).update(transaction).then(() => {
       this.transactionsChanged.next();
     });
   }
 
-  getTotals(): Observable<{ income: number; expense: number }> {
-    return this.getTransactions().pipe(
-      map(transactions => {
-        const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-        const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-        return { income, expense };
-      })
-    );
+  // Eliminar una transacción
+  deleteTransaction(id: string): Promise<void> {
+    return this.transactionsCollection.doc(id).delete().then(() => {
+      this.transactionsChanged.next();
+    });
   }
 
-  getTotalsByCategory(): Observable<{ [category: string]: number }> {
+  // Totales anuales por mes (ingresos y gastos)
+  getMonthlyIncomeAndExpenses(): Observable<{ income: number[]; expense: number[] }> {
     return this.getTransactions().pipe(
       map(transactions => {
-        return transactions.reduce((acc, t) => {
-          if (!acc[t.category]) {
-            acc[t.category] = 0;
+        const monthlyIncome = new Array(12).fill(0);
+        const monthlyExpenses = new Array(12).fill(0);
+
+        transactions.forEach(transaction => {
+          const month = new Date(transaction.date).getMonth();
+
+          if (transaction.type === 'income') {
+            if (transaction.category === 'Bizum') {
+              monthlyExpenses[month] -= transaction.amount; // Restar Bizum a los gastos
+            } else {
+              monthlyIncome[month] += transaction.amount; // Sumar otros ingresos
+            }
+          } else if (transaction.type === 'expense') {
+            monthlyExpenses[month] += transaction.amount; // Sumar todos los gastos
           }
-          acc[t.category] += t.amount;
-          return acc;
-        }, {} as { [category: string]: number });
+        });
+
+        // Asegurar que los gastos no sean negativos
+        const adjustedExpenses = monthlyExpenses.map(expense => (expense < 0 ? 0 : expense));
+
+        return { income: monthlyIncome, expense: adjustedExpenses };
       })
     );
   }
 
+  // Gastos por categoría ajustados
+  getAnnualExpensesByCategory(): Observable<{ [category: string]: number }> {
+    return this.getTransactions().pipe(
+      map(transactions => {
+        const expensesByCategory: { [category: string]: number } = {};
+
+        transactions.forEach(transaction => {
+          if (transaction.type === 'expense') {
+            if (!expensesByCategory[transaction.category]) {
+              expensesByCategory[transaction.category] = 0;
+            }
+            expensesByCategory[transaction.category] += transaction.amount; // Sumar gastos
+          }
+
+          if (transaction.type === 'income' && transaction.category === 'Bizum') {
+            if (!expensesByCategory['Otros']) {
+              expensesByCategory['Otros'] = 0;
+            }
+            expensesByCategory['Otros'] -= transaction.amount; // Restar Bizum de "Otros"
+          }
+        });
+
+        // Asegurar que no haya valores negativos
+        Object.keys(expensesByCategory).forEach(category => {
+          if (expensesByCategory[category] < 0) {
+            expensesByCategory[category] = 0;
+          }
+        });
+
+        return expensesByCategory;
+      })
+    );
+  }
+
+  // Transacciones filtradas por mes y año
   getTransactionsByMonth(year: number, month: number): Observable<Transaction[]> {
     return this.getTransactions().pipe(
       map(transactions =>
-        transactions
-          .filter(t => {
-            const transactionDate = new Date(t.date);
-            return transactionDate.getFullYear() === year && transactionDate.getMonth() === month;
-          })
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Ordena de más reciente a más antigua
+        transactions.filter(t => {
+          const transactionDate = new Date(t.date);
+          return transactionDate.getFullYear() === year && transactionDate.getMonth() === month - 1;
+        })
       )
     );
   }
 
+  // Totales anuales desglosados por mes
   getAnnualIncomeExpense(): Observable<{ income: number; expense: number }[]> {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth();
-    return this.getTransactions().pipe(
-      map(transactions => {
-        const result = Array(12).fill(null).map(() => ({ income: 0, expense: 0 }));
-        transactions.forEach(t => {
-          const month = t.date.getMonth();
-          if (t.date.getFullYear() === currentYear && month <= currentMonth) {
-            if (t.type === 'income') {
-              result[month].income += t.amount;
-            } else {
-              result[month].expense += t.amount;
-            }
-          }
-        });
-        return result;
-      })
-    );
-  }
-
-  getAnnualExpensesByCategory(): Observable<{ [category: string]: number }> {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth();
-    return this.getTransactions().pipe(
-      map(transactions => {
-        const annualTransactions = transactions.filter(
-          t => t.date.getFullYear() === currentYear && t.type === 'expense' && t.date.getMonth() <= currentMonth
-        );
-        return annualTransactions.reduce((acc, t) => {
-          if (!acc[t.category]) {
-            acc[t.category] = 0;
-          }
-          acc[t.category] += t.amount;
-          return acc;
-        }, {} as { [category: string]: number });
-      })
-    );
-  }
-
-  getMonthlyExpensesByCategory(year: number, month: number): Observable<{ [category: string]: number }> {
-    return this.getTransactions().pipe(
-      map(transactions => {
-        const monthlyTransactions = transactions.filter(
-          t => t.date.getFullYear() === year && t.date.getMonth() === month - 1 && t.type === 'expense'
-        );
-        return monthlyTransactions.reduce((acc, t) => {
-          if (!acc[t.category]) {
-            acc[t.category] = 0;
-          }
-          acc[t.category] += t.amount;
-          return acc;
-        }, {} as { [category: string]: number });
+    return this.getMonthlyIncomeAndExpenses().pipe(
+      map(data => {
+        return data.income.map((income, index) => ({
+          income,
+          expense: data.expense[index],
+        }));
       })
     );
   }

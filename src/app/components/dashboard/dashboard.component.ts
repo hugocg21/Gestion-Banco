@@ -37,28 +37,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   constructor(private transactionsService: TransactionsService) {}
 
   ngOnInit(): void {
-
-    this.transactionsService.transactionsChanged.subscribe(() => {
-      this.updateSummary();
-      this.updateExpenseDistribution();
-    });
-
-
-    this.updateSummary();
-    this.updateExpenseDistribution();
+    this.loadMonthlyData();
+    this.loadCategoryData();
   }
 
-  ngAfterViewInit(): void {
-    if (this.financialSummaryChart) {
-      this.createChart(this.financialSummaryChart.nativeElement);
-    }
-  }
-
-  updateSummary() {
-    this.transactionsService.getAnnualIncomeExpense().subscribe((data) => {
-      console.log('Datos de ingresos y gastos:', data);
-      this.monthlyIncome = data.map((item) => item.income);
-      this.monthlyExpenses = data.map((item) => item.expense);
+  loadMonthlyData(): void {
+    this.transactionsService.getMonthlyIncomeAndExpenses().subscribe((data) => {
+      this.monthlyIncome = data.income;
+      this.monthlyExpenses = data.expense;
 
       if (this.financialSummaryChart) {
         this.createChart(this.financialSummaryChart.nativeElement);
@@ -66,15 +52,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  updateExpenseDistribution() {
+  loadCategoryData(): void {
     this.transactionsService.getAnnualExpensesByCategory().subscribe((data) => {
-      console.log('Datos de gastos por categoría:', data);
       this.annualExpensesByCategory = data;
 
       if (this.expenseDistributionChart) {
         this.createExpenseDistributionChart(this.expenseDistributionChart.nativeElement);
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.financialSummaryChart) {
+      this.createChart(this.financialSummaryChart.nativeElement);
+    }
   }
 
   onTabChange(event: MatTabChangeEvent): void {
